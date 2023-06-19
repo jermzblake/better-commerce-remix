@@ -1,0 +1,134 @@
+@font-face {
+  font-family: "baloo";
+  src: url("/fonts/baloo/baloo.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --hs-links: 48 100%;
+  --color-primary-text: hsl(0, 0%, 0%);
+  --color-secondary-text: hsl(278, 73%, 19%);
+  --color-primary-background: hsl(0, 0%, 100%);
+  --color-links: hsl(var(--hs-links) 50%);
+  --color-links-hover: hsl(var(--hs-links) 45%);
+  --color-border: hsl(0, 0%, 0%);
+  --color-invalid: hsl(356, 100%, 71%);
+  --gradient-background: radial-gradient(
+    circle,
+    rgba(152, 11, 238, 1) 0%,
+    rgba(118, 15, 181, 1) 35%,
+    rgba(58, 13, 85, 1) 100%
+  );
+  --font-body: -apple-system, "Segoe UI", Helvetica Neue, Helvetica,
+    Roboto, Arial, sans-serif, system-ui, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-display: baloo, var(--font-body);
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  background-color: var(--color-primary-background);
+  color: var(--color-primary-text);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  min-height: calc(100vh - env(safe-area-inset-bottom));
+}
+
+a {
+  color: var(--color-links);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-links-hover);
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+h4 {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+h5,
+h6 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid var(--color-border);
+  position: fixed;
+  top: 0;
+  padding: 1em;
+}
+
+nav > ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  margin: 0px;
+  padding: 0px;
+}
+
+nav > ul > li {
+  margin: 0 10px;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: calc(100vh - env(safe-area-inset-bottom));
+}
+
+button {
+  cursor: pointer;
+}
