@@ -1,0 +1,48 @@
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-section {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 10px;
+}
+
+.hero {
+  display: flex;
+}
+
+.hero-slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.inner-slider {
+  white-space: nowrap;
+  transition: transform 0.3s;
+}
+
+.slider-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  background-color: gold;
+  color: black;
+}
+
+.slider-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.slider-control {
+  margin: 0.5em;
+}
+
+.slider-control--active {
+  background-color: gold;
+  color: black;
+}
