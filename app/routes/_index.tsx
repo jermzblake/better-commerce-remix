@@ -9,19 +9,19 @@ export const links: LinksFunction = () => {
 }
 const slides = [
   {
-    imageUrl: "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
+    imageUrl: "https://picsum.photos/1080/500",
     heading: "Slide 1",
     tagline: "Tagline1",
     ctaText: "CTA"
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
+    imageUrl: "https://picsum.photos/id/96/1080/500",
     heading: "Slide 2",
     tagline: "Tagline2",
     ctaText: "CTA"
   },
   {
-    imageUrl: "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
+    imageUrl: "https://picsum.photos/id/26/1080/500",
     heading: "Slide 3",
     tagline: "Tagline3",
     ctaText: "CTA"
