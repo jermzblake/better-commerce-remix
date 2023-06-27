@@ -33,7 +33,7 @@ export const meta: V2_MetaFunction = () => {
     { title: "Better Commerce" },
     { name: "description", content: "Welcome to Better Commerce" },
   ];
-};
+}
 
 const Index = () => {
   return (
@@ -43,7 +43,7 @@ const Index = () => {
         {slides.map((slide, index) => (
           <SliderItem key={index} width="100%">
             <h2>{slide.heading}</h2>
-            <img src={slide.imageUrl} alt="hero slide" style={{ objectFit: "contain", objectPosition: "center", height: "50vh"}} />
+            <img className="hero-slider--image" src={slide.imageUrl} alt="hero slide" style={{ objectFit: "contain", objectPosition: "center", height: "50vh"}} />
             <p>{slide.tagline}</p>
           </SliderItem>
         ))}
