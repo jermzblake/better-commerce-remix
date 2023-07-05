@@ -28,7 +28,7 @@ export const NavBar = () => {
             onChange={handleChange}
           />
         </div>
-        <div>cart</div>
+        <div><Link to="/cart">cart</Link></div>
       </div>
     </nav>
   )
