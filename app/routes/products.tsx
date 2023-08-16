@@ -25,6 +25,7 @@ export const loader: LoaderFunction = async () => {
   return json(await res.json())
 }
 
+// TODO make this its own reuseable component
 const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -64,7 +65,7 @@ const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
       {allData.map((item) => (
         <div key={item.id}>
           {/* Render your data here */}
-          {item.name} {item.price} {}
+          {item.name} {item.price}
         </div>
       ))}
       {isLoading ? (
@@ -85,9 +86,6 @@ const ProductsRoute = () => {
       <NavBar />
       <div>
         <h1>This is the products page</h1>
-        {/* {products?.data?.map((product: Product) => (
-        <div key={product.id}>{product.name} {product.price}</div>
-      ))} */}
         <PaginatedData params={products} />
         {/* <Outlet /> */}
       </div>
