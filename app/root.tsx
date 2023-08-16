@@ -7,7 +7,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData
 } from "@remix-run/react";
+import { json } from '@remix-run/node'
 import globalStylesUrl from "./styles/global.css";
 
 export const links: LinksFunction = () => [
@@ -18,7 +20,17 @@ export const links: LinksFunction = () => [
   }
 ];
 
+export async function loader() {
+  return json({
+    ENV: {
+      REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
+      REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    },
+  });
+}
+
 export default function App() {
+  const data = useLoaderData<typeof loader>()
   return (
     <html lang="en">
       <head>
@@ -29,6 +41,13 @@ export default function App() {
       </head>
       <body>
         <Outlet />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(
+              data.ENV
+            )}`,
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
