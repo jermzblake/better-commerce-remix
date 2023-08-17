@@ -16,7 +16,7 @@ export const NavBar = () => {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/about">About</Link>
+          <Link to="/products">Products</Link>
         </li>
       </ul>
       <div className="nav-section">
@@ -28,7 +28,7 @@ export const NavBar = () => {
             onChange={handleChange}
           />
         </div>
-        <div>cart</div>
+        <div><Link to="/cart">cart</Link></div>
       </div>
     </nav>
   )

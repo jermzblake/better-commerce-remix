@@ -1,1 +1,5 @@
 export * from './slides.types'
+export * from './order.types'
+export * from './product.types'
+export * from './order.item.types'
+export * from './paging.params.types'
