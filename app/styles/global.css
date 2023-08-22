@@ -106,6 +106,7 @@ nav {
   position: fixed;
   top: 0;
   padding: 1em;
+  background-color: var(--color-primary-background);
 }
 
 nav > ul {
