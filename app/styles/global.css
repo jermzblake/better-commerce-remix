@@ -107,6 +107,7 @@ nav {
   top: 0;
   padding: 1em;
   background-color: var(--color-primary-background);
+  z-index: 3;
 }
 
 nav > ul {
