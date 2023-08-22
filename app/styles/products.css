@@ -32,3 +32,9 @@
   height: 2rem;
   border-radius: 6px;
 }
+
+.product-list-header {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
