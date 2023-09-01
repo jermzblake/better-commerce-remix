@@ -6,6 +6,7 @@ import type { LinksFunction } from '@remix-run/node'
 import stylesUrl from '~/styles/products.css'
 import type { Product, PagingParams } from '../common/types'
 import { useState } from 'react'
+import { useNavigate } from "react-router-dom"
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: stylesUrl }]
@@ -13,7 +14,7 @@ export const links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async () => {
   const page = 1
-  const pageSize = 2
+  const pageSize = 16
   const apiKey = process.env.REACT_APP_API_KEY!
   const apiUrl = process.env.REACT_APP_API_URL!
   const res = await fetch(`${apiUrl}/products?page=${page}&pageSize=${pageSize}&dir=desc&sort=created_at`, {
@@ -27,6 +28,7 @@ export const loader: LoaderFunction = async () => {
 
 // TODO make this its own reuseable component
 const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [allData, setAllData] = useState<Product[]>(params.data)
@@ -40,7 +42,7 @@ const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
     const apiUrl = window.ENV.REACT_APP_API_URL
     try {
       const nextPage = currentPage + 1
-      const pageSize = 2
+      const pageSize = 12
       const response = await fetch(
         `${apiUrl}/products?page=${nextPage}&pageSize=${pageSize}&dir=desc&sort=created_at`,
         {
@@ -62,19 +64,27 @@ const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
 
   return (
     <div>
-      {allData.map((item) => (
-        <div key={item.id}>
-          {/* Render your data here */}
-          {item.name} {item.price}
+      <div className="product-list-container">
+        <div className="product-list-grid">
+          {allData.map((item) => (
+            <div className="product-list-card" key={item.id} onClick={() => navigate(`/products/${item.id}`)}>
+              {/* Render your data here */}
+              <div><img src={item.media.thumbnail} alt="product card" className='product-list-card--image'/></div>
+              <div>{item.name}</div>
+              <div>${item.price}</div>
+            </div>
+          ))}
         </div>
-      ))}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <button onClick={handleLoadMore} disabled={allData.length >= totalCount}>
-          Load More
-        </button>
-      )}
+        <div className='load-more-container'>
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <button className='load-more-btn' onClick={handleLoadMore} disabled={allData.length >= totalCount}>
+              Load More
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
@@ -85,7 +95,9 @@ const ProductsRoute = () => {
     <div className="page-container">
       <NavBar />
       <div>
-        <h1>This is the products page</h1>
+        <div className='product-list-header'>
+          <h1>This is the products page</h1>
+        </div>
         <PaginatedData params={products} />
         {/* <Outlet /> */}
       </div>
