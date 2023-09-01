@@ -2,6 +2,7 @@
   display: flex;
   overflow-y: scroll;
   flex-direction: column;
+  margin-bottom: 2em;
 }
 
 .product-list-grid {
@@ -15,7 +16,7 @@
 
 .product-list-card {
   cursor: pointer;
-  width: 18.75rem;
+  width: 100%;
   @media screen and (max-width: 600px) {
     width: 10.938rem;
   }
@@ -37,4 +38,28 @@
   display: flex;
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 1rem;
+  background-color: var(--color-primary-background);
+  @media screen and (max-width: 600px) {
+    position: sticky;
+    top: 0;
+  }
+}
+
+.product-list-card--image {
+  width: 300px;
+  height: 250px;
+  @media screen and (max-width: 600px) {
+    width: 175px;
+    height: 200px;
+  }
+}
+
+.product-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  @media screen and (max-width: 600px) {
+    align-items: center;
+    height: 100vh;
+    overflow: auto;
+  }
 }
