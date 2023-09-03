@@ -1,3 +1,5 @@
+import type { Category } from './category.types'
+
 export interface Product {
   id: string
   name: string
@@ -6,7 +8,7 @@ export interface Product {
   quantity: number
   size: string
   media: ProductMedia
-  // categories?: Category[]
+  categories?: Category[]
   // orderItems?: OrderItem[]
 }
 
