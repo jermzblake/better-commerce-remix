@@ -67,7 +67,7 @@ const PaginatedData = ({ params }: { params: PagingParams<Product> }) => {
       <div className="product-list-container">
         <div className="product-list-grid">
           {allData.map((item) => (
-            <div className="product-list-card" key={item.id} onClick={() => navigate(`/product/${item.id}`)}>
+            <div className="product-list-card" key={item.id+ Math.floor(Math.random() * 5000)} onClick={() => navigate(`/product/${item.id}`)}>
               {/* Render your data here */}
               <div><img src={item.media.thumbnail} alt="product card" className='product-list-card--image'/></div>
               <div>{item.name}</div>
