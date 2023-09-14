@@ -1,8 +1,9 @@
-import { useLoaderData, useParams, useCatch } from '@remix-run/react'
+import { useLoaderData, useParams, useCatch, useFetcher, useLocation } from '@remix-run/react'
 import type { LoaderFunction, ActionFunction, V2_MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import type { Product } from '../common/types'
 import { NavBar } from '~/components/navbar/navBar'
+import { shoppingCartCookie } from '~/cookie.server'
 
 export const meta: V2_MetaFunction = ({
   data,
@@ -16,7 +17,7 @@ export const meta: V2_MetaFunction = ({
     ];
   }
   return [
-    {title: `"${data.name}" product`},
+    {title: `${data.name} product`},
     {description: `Enjoy the "${data.name}" product and much more`},
   ];
 };
@@ -33,15 +34,52 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!productData) {
     throw new Response("Might have better luck finding Carmen Sandiego.. This product not found", {
       status: 404
-    })
-    
+    })   
   }
   return json(await productData.json())
 
 }
 
+export const action: ActionFunction = async ({ request, params }) => {
+  const apiKey = process.env.REACT_APP_API_KEY!
+  const apiUrl = process.env.REACT_APP_API_URL!
+  const res = await fetch(`${apiUrl}/products/${params.productId}`, {
+    headers: {
+      'x-api-key': apiKey,
+      'Content-Type': 'application/json',
+    },
+  })
+  const product: Product = await res.json()
+  if (!product || product.quantity <= 0) {
+    throw new Response("Product is not available", { status: 404 })
+  }
+   //TODO need to install axios?
+   // TODO persist to shopping cart cookie and db
+   const cookieHeader = request.headers.get("Cookie")
+   const cookie = (await shoppingCartCookie.parse(cookieHeader)) || {}
+   const updatedCart = {
+     ...cookie,
+     [product.id]: {
+       id: product.id,
+       name: product.name,
+       price: product.price,
+       quantity: 1,
+       image: product.media.thumbnail,
+     },
+   }
+   const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
+  const redirectUrl = (await request.formData()).get("redirectUrl")
+  return redirect(typeof redirectUrl === "string" ? redirectUrl : "/cart", {
+    headers: {
+      "Set-Cookie": updatedCookie,
+    },
+  })
+}
+
 const ProductRoute = () => {
   const product = useLoaderData<Product>()
+  const { pathname, search } = useLocation()
+  const fetcher = useFetcher()
   return (
     <div className="page-container">
       <NavBar />
@@ -50,7 +88,12 @@ const ProductRoute = () => {
     <div>{product.name}</div>
     <div>{product.description}</div>
     <div>{product.price}</div>
-    <div><button>add to cart</button></div>
+    <div>
+    <fetcher.Form method="post">
+      <input hidden name="redirectUrl" value={pathname + search} readOnly />
+      <button>add to cart</button>
+    </fetcher.Form>
+    </div>
     {/* TODO render some other product related things after product display */}
     </div>
   )
