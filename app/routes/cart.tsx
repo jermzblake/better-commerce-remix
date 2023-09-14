@@ -4,17 +4,21 @@ import { json } from "@remix-run/node"
 import { NavBar } from "~/components/navbar/navBar"
 import type { LinksFunction } from '@remix-run/node'
 import stylesUrl from '~/styles/cart.css'
+import { shoppingCartCookie } from '~/cookie.server'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: stylesUrl }]
 }
 
-export const loader: LoaderFunction = async () => {
-  return null
+export const loader: LoaderFunction = async ({ request }) => {
+  const cookieHeader = request.headers.get("Cookie")
+  const cookie = (await shoppingCartCookie.parse(cookieHeader)) || {}
+  return json(cookie)
 }
 
 const CartRoute = () => {
   const items = useLoaderData()
+  // TODO map through items and render each item
   return (
     <div className="page-container">
       <NavBar />
