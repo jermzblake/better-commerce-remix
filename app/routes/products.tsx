@@ -1,5 +1,5 @@
 import { Outlet, Link, useLoaderData, useCatch } from '@remix-run/react'
-import type { LoaderFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { NavBar } from '~/components/navbar/navBar'
 import type { LinksFunction } from '@remix-run/node'
@@ -7,9 +7,15 @@ import stylesUrl from '~/styles/products.css'
 import type { Product, PagingParams } from '../common/types'
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
+import { APP_NAME } from '~/common/globalConstants'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: stylesUrl }]
+}
+
+export const meta: V2_MetaFunction = () => {
+
+  return [{ title: `Products | ${APP_NAME}` }, { description: `Shop the latest and greatest products and much more` }]
 }
 
 export const loader: LoaderFunction = async () => {
