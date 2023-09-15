@@ -46,17 +46,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   //TODO need to install axios?
   // TODO persist to shopping cart cookie and db
   const cookieHeader = request.headers.get('Cookie')
-  const cookie = (await shoppingCartCookie.parse(cookieHeader)) || {}
-  const updatedCart = {
+  const cookie = (await shoppingCartCookie.parse(cookieHeader)) || []
+  const updatedCart = [
     ...cookie,
-    [product.id]: {
+    {
       id: product.id,
       name: product.name,
       price: product.price,
       quantity: 1,
       image: product.media.thumbnail,
     },
-  }
+  ]
   const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
   const redirectUrl = (await request.formData()).get('redirectUrl')
   return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/cart', {
