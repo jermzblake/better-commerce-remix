@@ -4,6 +4,7 @@ import { json, redirect } from '@remix-run/node'
 import type { Product } from '../common/types'
 import { NavBar } from '~/components/navbar/navBar'
 import { shoppingCartCookie } from '~/cookie.server'
+import { APP_NAME } from '~/common/globalConstants'
 
 export const meta: V2_MetaFunction = ({
   data,
@@ -17,7 +18,7 @@ export const meta: V2_MetaFunction = ({
     ];
   }
   return [
-    {title: `${data.name} product`},
+    {title: `${data.name} | ${APP_NAME}`},
     {description: `Enjoy the "${data.name}" product and much more`},
   ];
 };
