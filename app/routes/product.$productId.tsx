@@ -47,18 +47,20 @@ export const action: ActionFunction = async ({ request, params }) => {
   // TODO persist to shopping cart cookie and db
   const cookieHeader = request.headers.get('Cookie')
   const cookie = (await shoppingCartCookie.parse(cookieHeader)) || []
+  const formData = await request.formData()
+  const quantity = Number(formData.get('quantity'))
   const updatedCart = [
     ...cookie,
     {
       id: product.id,
       name: product.name,
       price: product.price,
-      quantity: 1,
+      quantity: quantity || 1,
       image: product.media.thumbnail,
     },
   ]
   const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
-  const redirectUrl = (await request.formData()).get('redirectUrl')
+  const redirectUrl = formData.get('redirectUrl')
   return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/cart', {
     headers: {
       'Set-Cookie': updatedCookie,
@@ -82,8 +84,10 @@ const ProductRoute = () => {
       <div>{product.price}</div>
       <div>
         <fetcher.Form method="post">
+          <label htmlFor="quantity">Quantity:</label>
+          <input type="number" id="quantity" name="quantity" min="1" max="100" defaultValue={1} />
           <input hidden name="redirectUrl" value={pathname + search} readOnly />
-          <button>add to cart</button>
+          <button type="submit" value="Submit">add to cart</button>
         </fetcher.Form>
       </div>
       {/* TODO render some other product related things after product display */}
