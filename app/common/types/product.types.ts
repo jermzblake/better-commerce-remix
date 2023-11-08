@@ -18,3 +18,11 @@ export interface ProductMedia {
   gallery: string[]
   video: string
 }
+
+export interface CartProduct {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  image: string
+}
