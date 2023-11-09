@@ -44,21 +44,28 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw new Response('Product is not available', { status: 404 })
   }
   //TODO need to install axios?
-  // TODO persist to shopping cart cookie and db
+  // TODO persist to db for members
   const cookieHeader = request.headers.get('Cookie')
   const cookie = (await shoppingCartCookie.parse(cookieHeader)) || []
   const formData = await request.formData()
   const quantity = Number(formData.get('quantity'))
-  const updatedCart = [
-    ...cookie,
-    {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: quantity || 1,
-      image: product.media.thumbnail,
-    },
-  ]
+  const existingItemIndex = cookie.findIndex((item: Product) => item.id === product.id)
+  let updatedCart
+  if (existingItemIndex !== -1) {
+    cookie[existingItemIndex].quantity = cookie[existingItemIndex].quantity + quantity
+    updatedCart = [ ...cookie]
+  } else {
+    updatedCart = [
+      ...cookie,
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: quantity || 1,
+        image: product.media.thumbnail,
+      },
+    ]
+  }
   const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
   const redirectUrl = formData.get('redirectUrl')
   return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/cart', {
