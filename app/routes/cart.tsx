@@ -1,6 +1,6 @@
-import { Link, useLoaderData, useCatch } from "@remix-run/react"
-import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { useFetcher, useLoaderData, useCatch, useLocation } from "@remix-run/react"
+import type { LoaderFunction, V2_MetaFunction, ActionFunction } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { NavBar } from "~/components/navbar/navBar"
 import type { LinksFunction } from '@remix-run/node'
 import stylesUrl from '~/styles/cart.css'
@@ -23,8 +23,26 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(cookie)
 }
 
+export const action: ActionFunction = async ({ request, params }) => {
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = (await shoppingCartCookie.parse(cookieHeader)) || []
+  const formData = await request.formData()
+  const id = formData.get('id')
+  const updatedCart = cookie.filter((item: CartProduct) => item.id !== id)
+  const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
+  const redirectUrl = formData.get('redirectUrl')
+  return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/cart', {
+    headers: {
+      'Set-Cookie': updatedCookie,
+    },
+  }) 
+}
+
 const CartRoute = () => {
   const items: CartProduct[] = useLoaderData()
+  const fetcher = useFetcher()
+  const { pathname, search } = useLocation()
+
   let grandTotal: number | string = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   grandTotal = grandTotal.toFixed(2)
   
@@ -46,9 +64,16 @@ const CartRoute = () => {
           </div>
           <div className="cart-item-right-column">
             <div>{item.name}</div>
-            <div>Quantity: {item.quantity}</div>
             <div>Price: {item.price}</div>
+            <div>Quantity: {item.quantity}</div>
             <div>Total: {item.price * item.quantity}</div>
+            <div>
+            <fetcher.Form method="put">
+              <input hidden name="redirectUrl" value={pathname + search} readOnly />
+              <input hidden name="id" value={item.id} readOnly />
+              <button type="submit" value="Submit">remove</button>
+            </fetcher.Form>
+      </div>
           </div>
         </div>
       ))}
