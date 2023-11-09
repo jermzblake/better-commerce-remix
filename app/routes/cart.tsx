@@ -28,7 +28,24 @@ export const action: ActionFunction = async ({ request, params }) => {
   const cookie = (await shoppingCartCookie.parse(cookieHeader)) || []
   const formData = await request.formData()
   const id = formData.get('id')
-  const updatedCart = cookie.filter((item: CartProduct) => item.id !== id)
+  const action = formData.get("action")
+  let updatedCart
+  if (action === "updateQuantity") {
+    // Handle the quantity update action
+    const quantity = Number(formData.get('quantity'))
+    updatedCart = cookie.map((item: CartProduct) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: quantity || 1,
+        }
+      }
+      return item
+    })
+  } else if (action === "removeItem") {
+    // Handle the item removal action
+    updatedCart = cookie.filter((item: CartProduct) => item.id !== id)
+  }
   const updatedCookie = await shoppingCartCookie.serialize(updatedCart)
   const redirectUrl = formData.get('redirectUrl')
   return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/cart', {
@@ -65,10 +82,27 @@ const CartRoute = () => {
           <div className="cart-item-right-column">
             <div>{item.name}</div>
             <div>Price: {item.price}</div>
-            <div>Quantity: {item.quantity}</div>
-            <div>Total: {item.price * item.quantity}</div>
-            <div>
             <fetcher.Form method="put">
+              {/* Quantity form */}
+              <input type="hidden" name="action" value="updateQuantity" />
+              <label htmlFor="quantity">Quantity:</label>
+              <input 
+                type="number" 
+                id="quantity" 
+                name="quantity" 
+                min="1" 
+                max="100" 
+                defaultValue={item.quantity} 
+                onChange={(e) => e.target.closest("form")?.submit()} 
+              />
+              <input hidden name="redirectUrl" value={pathname + search} readOnly />
+              <input hidden name="id" value={item.id} readOnly />
+              </fetcher.Form>
+            <div>Total: {(item.price * item.quantity).toFixed(2)}</div>
+            <div>
+              {/* Remove form */}
+              <fetcher.Form method="put">
+              <input type="hidden" name="action" value="removeItem" />
               <input hidden name="redirectUrl" value={pathname + search} readOnly />
               <input hidden name="id" value={item.id} readOnly />
               <button type="submit" value="Submit">remove</button>
