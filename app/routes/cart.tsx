@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useCatch, useLocation } from "@remix-run/react"
+import { useFetcher, useLoaderData, useCatch, useLocation, Link } from "@remix-run/react"
 import type { LoaderFunction, V2_MetaFunction, ActionFunction } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { NavBar } from "~/components/navbar/navBar"
@@ -112,6 +112,9 @@ const CartRoute = () => {
         </div>
       ))}
       <div style={{ textAlign: "right" }}>Grand Total: {grandTotal}</div>
+        <div style={{ textAlign: "right" }}>
+          <Link to="/checkout"><button disabled={Number(grandTotal) <= 0}>Checkout</button></Link>
+        </div>
     </div>
   )
 }
