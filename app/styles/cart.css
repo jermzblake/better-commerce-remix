@@ -1,0 +1,15 @@
+.cart-item-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+  grid-template-rows: auto; /* Auto-sized rows */
+  grid-gap: 10px; /* Gap between grid items */
+}
+
+.cart-item-left-column {
+  grid-row: 1 / span 4; /* The left column spans three rows */
+}
+
+.cart-item-right-column {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr); /* Three equal-height rows */
+}
