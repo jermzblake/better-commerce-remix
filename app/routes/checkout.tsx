@@ -1,5 +1,5 @@
 import { Link, useLoaderData, useFetcher } from '@remix-run/react'
-import type { LoaderFunction, ActionFunction } from '@remix-run/node'
+import type { LoaderFunction, ActionFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { NavBar } from '~/components/navbar/navBar'
 import type { LinksFunction } from '@remix-run/node'
@@ -10,6 +10,13 @@ import { useState } from 'react'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: stylesUrl }]
+}
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: 'Checkout | Better Commerce' },
+    { description: 'Checkout for Better Commerce' }
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

@@ -76,6 +76,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 const ProductRoute = () => {
+  //TODO add structured data
   const product = useLoaderData<Product>()
   const { pathname, search } = useLocation()
   const fetcher = useFetcher()
