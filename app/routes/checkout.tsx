@@ -59,11 +59,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     body: JSON.stringify(orderRequest),
   })
   if (json(response)) {
-  // Clear the cookie
-  const clearedCookie = await clearShoppingCartCookie()
+    // Clear the cookie
+    const clearedCartCookie = await clearShoppingCartCookie()
     return redirect('/confirmation', {
       headers: {
-        'Set-Cookie': clearedCookie,
+        'Set-Cookie': clearedCartCookie,
       },
     })
   } else {
