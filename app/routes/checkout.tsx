@@ -13,10 +13,7 @@ export const links: LinksFunction = () => {
 }
 
 export const meta: V2_MetaFunction = () => {
-  return [
-    { title: 'Checkout | Better Commerce' },
-    { description: 'Checkout for Better Commerce' }
-  ]
+  return [{ title: 'Checkout | Better Commerce' }, { description: 'Checkout for Better Commerce' }]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -104,6 +101,42 @@ const CheckoutRoute = () => {
       <div>
         <h1>Checkout</h1>
         <fetcher.Form method="post">
+          <div>
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="First Name"
+              required
+              // value={checkoutForm.customerFirstName}
+              // onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Last Name"
+              required
+              // value={checkoutForm.customerLastName}
+              // onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              required
+              // value={checkoutForm.customerEmail}
+              // onChange={handleChange}
+            />
+          </div>
           <div>
             <label htmlFor="shipping">Shipping Address</label>
             <input
@@ -194,42 +227,6 @@ const CheckoutRoute = () => {
           </div>
           {!isSameAddress && (
             <>
-              <div>
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  placeholder="First Name"
-                  required
-                  // value={checkoutForm.customerFirstName}
-                  // onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Last Name"
-                  required
-                  // value={checkoutForm.customerLastName}
-                  // onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Email"
-                  required
-                  // value={checkoutForm.customerEmail}
-                  // onChange={handleChange}
-                />
-              </div>
               <div>
                 <label htmlFor="address">Address</label>
                 <input
