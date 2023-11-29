@@ -1,10 +1,10 @@
 import { Link, useLoaderData, useFetcher } from '@remix-run/react'
 import type { LoaderFunction, ActionFunction, V2_MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { NavBar } from '~/components/navbar/navBar'
 import type { LinksFunction } from '@remix-run/node'
 import stylesUrl from '~/styles/checkout.css'
-import { shoppingCartCookie } from '~/cookie.server'
+import { shoppingCartCookie, clearShoppingCartCookie } from '~/cookie.server'
 import type { CartProduct } from '~/common/types'
 import { useState } from 'react'
 
@@ -58,7 +58,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
     body: JSON.stringify(orderRequest),
   })
-  return json(response)
+  if (json(response)) {
+  // Clear the cookie
+  const clearedCookie = await clearShoppingCartCookie()
+    return redirect('/confirmation', {
+      headers: {
+        'Set-Cookie': clearedCookie,
+      },
+    })
+  } else {
+    // TODO: show error
+    return redirect('/checkout')
+  }
 }
 
 const CheckoutRoute = () => {
