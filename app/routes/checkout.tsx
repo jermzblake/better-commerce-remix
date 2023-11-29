@@ -34,10 +34,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   const id = formData.get('id')
   const action = formData.get('action')
   const orderRequest = {
-    customerFirstName: formData.get('customerFirstName'),
-    customerLastName: formData.get('customerLastName'),
-    customerEmail: formData.get('customerEmail'),
-    customerPhoneNumber: formData.get('customerPhoneNumber'),
+    customerFirstName: formData.get('firstName'),
+    customerLastName: formData.get('lastName'),
+    customerEmail: formData.get('email'),
+    customerPhoneNumber: formData.get('phoneNumber'),
     shippingAddress: {
       address: formData.get('shippingAddress'),
       country: formData.get('shippingCountry'),
@@ -53,6 +53,15 @@ export const action: ActionFunction = async ({ request, params }) => {
     }),
     totalAmount: formData.get('totalAmount'),
   }
+  const response = await fetch(`${apiUrl}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': apiKey,
+    },
+    body: JSON.stringify(orderRequest),
+  })
+  return json(response)
 }
 
 const CheckoutRoute = () => {
@@ -192,6 +201,7 @@ const CheckoutRoute = () => {
                   id="firstName"
                   name="firstName"
                   placeholder="First Name"
+                  required
                   // value={checkoutForm.customerFirstName}
                   // onChange={handleChange}
                 />
@@ -203,6 +213,7 @@ const CheckoutRoute = () => {
                   id="lastName"
                   name="lastName"
                   placeholder="Last Name"
+                  required
                   // value={checkoutForm.customerLastName}
                   // onChange={handleChange}
                 />
@@ -214,6 +225,7 @@ const CheckoutRoute = () => {
                   id="email"
                   name="email"
                   placeholder="Email"
+                  required
                   // value={checkoutForm.customerEmail}
                   // onChange={handleChange}
                 />
