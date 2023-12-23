@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useFetcher } from '@remix-run/react'
+import { Form, useActionData, useNavigation, useLoaderData } from '@remix-run/react'
 import type { LoaderFunction, ActionFunction, V2_MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { NavBar } from '~/components/navbar/navBar'
@@ -7,6 +7,7 @@ import stylesUrl from '~/styles/checkout.css'
 import { shoppingCartCookie, clearShoppingCartCookie } from '~/cookie.server'
 import type { CartProduct } from '~/common/types'
 import { useState } from 'react'
+import validator from 'validator'
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: stylesUrl }]
@@ -30,11 +31,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData()
   const id = formData.get('id')
   const action = formData.get('action')
+
   const orderRequest = {
     customerFirstName: formData.get('firstName'),
     customerLastName: formData.get('lastName'),
     customerEmail: formData.get('email'),
-    customerPhoneNumber: formData.get('phoneNumber'),
+    customerPhoneNumber: formData.get('phone'),
     shippingAddress: {
       address: formData.get('shippingAddress'),
       country: formData.get('shippingCountry'),
@@ -50,6 +52,28 @@ export const action: ActionFunction = async ({ request, params }) => {
     }),
     totalAmount: formData.get('totalAmount'),
   }
+
+  const validateCheckoutFormData = (orderRequest: any) => {
+    const errors: any = {}
+    if (orderRequest.customerEmail && !validator.isEmail(orderRequest.customerEmail)) {
+      errors.email = 'Invalid email'
+    }
+
+    if (orderRequest.customerPhoneNumber && !validator.isMobilePhone(orderRequest.customerPhoneNumber)) {
+      errors.phoneNumber = 'Invalid phone number'
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return errors
+    }
+  }
+
+  const errors = await validateCheckoutFormData(orderRequest)
+
+  if (errors) {
+    return json({ errors }, { status: 400 })
+  }
+
   const response = await fetch(`${apiUrl}/orders`, {
     method: 'POST',
     headers: {
@@ -67,14 +91,17 @@ export const action: ActionFunction = async ({ request, params }) => {
       },
     })
   } else {
-    // TODO: show error
+    // TODO: show/handle error
     return redirect('/checkout')
   }
 }
 
 const CheckoutRoute = () => {
   const items: CartProduct[] = useLoaderData()
-  const fetcher = useFetcher()
+  const actionData = useActionData<typeof action>()
+  const errors = actionData?.errors
+  const navigation = useNavigation()
+  const isSubmitting = navigation.formAction === '/checkout' 
   const [isSameAddress, setIsSameAddress] = useState(false)
   const [checkoutForm, setCheckoutForm] = useState({
     customerFirstName: '',
@@ -111,7 +138,7 @@ const CheckoutRoute = () => {
       <NavBar />
       <div>
         <h1>Checkout</h1>
-        <fetcher.Form method="post">
+        <Form method="post">
           <div>
             <label htmlFor="firstName">First Name</label>
             <input
@@ -147,6 +174,7 @@ const CheckoutRoute = () => {
               // value={checkoutForm.customerEmail}
               // onChange={handleChange}
             />
+            {errors?.email ? <span className='form-error'>{errors.email}</span> : null}
           </div>
           <div>
             <label htmlFor="shipping">Shipping Address</label>
@@ -214,6 +242,7 @@ const CheckoutRoute = () => {
               // value={checkoutForm.customerPhoneNumber}
               // onChange={handleChange}
             />
+            {errors?.phoneNumber ? <span className='form-error'>{errors.phoneNumber}</span> : null}
           </div>
           <div>
             <label htmlFor="note">Note</label>
@@ -321,9 +350,9 @@ const CheckoutRoute = () => {
             <input hidden name="totalAmount" value={subTotal} readOnly />
           </div>
           <div>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit'}</button>
           </div>
-        </fetcher.Form>
+        </Form>
       </div>
       <div style={{ textAlign: 'right' }}>Subtotal: {subTotal}</div>
       <div style={{ textAlign: 'right' }}>Shipping: {0}</div>
