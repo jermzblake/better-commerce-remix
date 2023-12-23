@@ -74,23 +74,26 @@ export const action: ActionFunction = async ({ request, params }) => {
     return json({ errors }, { status: 400 })
   }
 
-  const response = await fetch(`${apiUrl}/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': apiKey,
-    },
-    body: JSON.stringify(orderRequest),
-  })
-  if (json(response)) {
-    // Clear the cookie
-    const clearedCartCookie = await clearShoppingCartCookie()
-    return redirect('/confirmation', {
+  try {
+    const response = await fetch(`${apiUrl}/orders`, {
+      method: 'POST',
       headers: {
-        'Set-Cookie': clearedCartCookie,
+        'Content-Type': 'application/json',
+        'X-API-KEY': apiKey,
       },
+      body: JSON.stringify(orderRequest),
     })
-  } else {
+      const clearedCartCookie = await clearShoppingCartCookie() // Clear the cookie
+      const data = await response.json()
+      const dataString = JSON.stringify(data)
+      const encryptedData = Buffer.from(dataString).toString('base64')
+      const redirectUrlWithData = "/confirmation?orderData=" + encodeURIComponent(encryptedData)
+      return redirect(redirectUrlWithData, {
+        headers: {
+          'Set-Cookie': clearedCartCookie,
+        },
+      })
+  } catch (error) {
     // TODO: show/handle error
     return redirect('/checkout')
   }
