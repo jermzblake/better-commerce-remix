@@ -22,7 +22,7 @@ const ConfirmationRoute = () => {
       </div>
       <div>
         <p>Thank you for your order</p>
-        <p>Your order number is: {orderData.id}</p>
+        <p>Your order reference number is: {orderData.id}</p>
       </div>
       <div>Don't stop now. <Link to="/products">Continue Shopping</Link></div>
     </div>
