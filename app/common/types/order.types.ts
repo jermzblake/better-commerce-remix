@@ -1,6 +1,7 @@
 import type { OrderItem } from './index'
 
 export interface Order {
+  id?: string
   memberId?: string
   shippingAddress: any
   totalAmount: string
