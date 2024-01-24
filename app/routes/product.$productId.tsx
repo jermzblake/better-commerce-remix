@@ -62,7 +62,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         name: product.name,
         price: product.price,
         quantity: quantity || 1,
-        image: product.media.thumbnail,
+        image: product.media?.thumbnail,
       },
     ]
   }
@@ -85,7 +85,7 @@ const ProductRoute = () => {
       <NavBar />
       {/* render product display */}
       <div>
-        <img src={product.media.thumbnail} alt="product" />
+        <img src={product.media?.thumbnail} alt="product" />
       </div>
       <div>{product.name}</div>
       <div>{product.description}</div>
