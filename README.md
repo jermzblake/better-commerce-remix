@@ -1,6 +1,6 @@
-# Welcome to Remix!
+# Welcome to Better Commerce (Remix Style)!
 
-- [Remix Docs](https://remix.run/docs)
+[LIVE DEMO](https://better-commerce-remix.onrender.com)
 
 ## Development
 
